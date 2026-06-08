@@ -1,6 +1,7 @@
 package com.student.api.StudentRegistration.service;
 
 
+import com.student.api.StudentRegistration.exception.StudentNotFoundException;
 import com.student.api.StudentRegistration.model.Student;
 import com.student.api.StudentRegistration.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -28,13 +29,13 @@ public class StudentService {
     // Read one
     public Student getStudentById(Long id){
         return studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student with ID "+ id +" not found"));
+                .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
     // Update
     public Student updateStudent(Long id, Student updatedStudent){
         Student existing = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student with ID "+id+" not found"));
+                .orElseThrow(() -> new StudentNotFoundException(id));
 
         existing.setName(updatedStudent.getName());
         existing.setSurname(updatedStudent.getSurname());
@@ -47,7 +48,7 @@ public class StudentService {
     // Delete
     public void deleteStudent(Long id){
         if(!studentRepository.existsById(id)){
-            throw new RuntimeException("Student with ID " + id + " not found");
+            throw new StudentNotFoundException(id);
         }
         studentRepository.deleteById(id);
     }
